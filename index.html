@@ -1,0 +1,1142 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仙佛護持・能量防護噴霧</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP 动画库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <!-- ScrollTrigger 插件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#1a237e',
+                            light: '#534bae',
+                            dark: '#000051'
+                        },
+                        secondary: {
+                            DEFAULT: '#7b1fa2',
+                            light: '#ab47bc',
+                            dark: '#4a148c'
+                        },
+                        accent: {
+                            DEFAULT: '#ffd700',
+                            light: '#ffff52',
+                            dark: '#c7a600'
+                        },
+                        dark: {
+                            DEFAULT: '#121212',
+                            light: '#1e1e1e',
+                            lighter: '#2d2d2d'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans TC', 'sans-serif'],
+                        serif: ['Noto Serif TC', 'serif']
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;700&display=swap');
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #121212;
+            color: #f5f5f5;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Noto Serif TC', serif;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #534bae, #ab47bc, #ffd700);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #1a237e, #4a148c);
+        }
+
+        .bg-gradient-secondary {
+            background: linear-gradient(135deg, #7b1fa2, #4a148c);
+        }
+
+        .bg-gradient-accent {
+            background: linear-gradient(135deg, #ffd700, #c7a600);
+        }
+
+        .card {
+            backdrop-filter: blur(10px);
+            background-color: rgba(30, 30, 30, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .bottle-container {
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .bottle {
+            transition: transform 0.5s ease;
+        }
+
+        .bottle-container:hover .bottle {
+            transform: rotateY(15deg) rotateX(5deg);
+        }
+
+        .energy-field {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(93, 93, 255, 0.3) 0%, rgba(138, 43, 226, 0.2) 50%, rgba(0, 0, 0, 0) 70%);
+            animation: pulse 3s infinite alternate;
+            z-index: -1;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: #ffd700;
+            pointer-events: none;
+            animation: float-particle 8s infinite ease-in-out;
+        }
+
+        @keyframes float-particle {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10%, 90% {
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-100px) translateX(20px);
+                opacity: 0.5;
+            }
+        }
+
+        #energy-field-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .ingredient-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ingredient-card {
+            transition: all 0.3s ease;
+        }
+
+        .ingredient-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .use-scenario-icon {
+            transition: all 0.3s ease;
+        }
+
+        .use-scenario-card:hover .use-scenario-icon {
+            transform: scale(1.2);
+            color: #ffd700;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1a237e, #4a148c);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover::after {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 20, 140, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #7b1fa2, #4a148c);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(123, 31, 162, 0.4);
+        }
+
+        .btn-accent {
+            background: linear-gradient(135deg, #ffd700, #c7a600);
+            color: #121212;
+            transition: all 0.3s ease;
+        }
+
+        .btn-accent:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .interactive-area {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            background: radial-gradient(circle at center, rgba(26, 35, 126, 0.3), rgba(12, 12, 12, 0.8));
+        }
+
+        .mist-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.5) 0%, rgba(0, 0, 0, 0) 70%);
+            transition: all 1s ease;
+            z-index: 1;
+        }
+
+        .mist-effect.active {
+            width: 300px;
+            height: 300px;
+        }
+
+        .bottle-interactive {
+            position: relative;
+            z-index: 2;
+            transition: all 0.5s ease;
+        }
+
+        .bottle-interactive.active {
+            transform: rotate(45deg);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .hero-content {
+                text-align: center;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .ingredient-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .use-scenario-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 加载动画 */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-circle {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- 加载动画 -->
+    <div class="loader">
+        <div class="loader-circle"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 left-0 w-full bg-dark-light bg-opacity-90 backdrop-blur-md z-50 border-b border-gray-800">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <a href="#" class="text-2xl font-bold gradient-text" style="font-size: 32px;">仙佛護持*防護盾</a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#concept" class="text-gray-300 hover:text-white transition-colors">核心功能</a>
+                    <a href="#ingredients" class="text-gray-300 hover:text-white transition-colors">神聖成分</a>
+                    <a href="#benefits" class="text-gray-300 hover:text-white transition-colors">主要功效</a>
+                    <a href="#usage" class="text-gray-300 hover:text-white transition-colors">使用場所</a>
+                    <a href="#experience" class="text-gray-300 hover:text-white transition-colors">能量體驗</a>
+                </div>
+                <button class="md:hidden text-white focus:outline-none" id="mobile-menu-button">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- 移动端菜单 -->
+        <div class="md:hidden hidden bg-dark-light border-t border-gray-800" id="mobile-menu">
+            <div class="container mx-auto px-4 py-2">
+                <a href="#concept" class="block py-2 text-gray-300 hover:text-white transition-colors">核心功能</a>
+                <a href="#ingredients" class="block py-2 text-gray-300 hover:text-white transition-colors">神聖成分</a>
+                <a href="#benefits" class="block py-2 text-gray-300 hover:text-white transition-colors">主要功效</a>
+                <a href="#usage" class="block py-2 text-gray-300 hover:text-white transition-colors">使用場所</a>
+                <a href="#experience" class="block py-2 text-gray-300 hover:text-white transition-colors">能量體驗</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <header class="relative min-h-screen flex items-center pt-16 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-b from-primary-dark to-dark"></div>
+            <!-- 粒子背景 -->
+            <div id="particles-container" class="absolute inset-0"></div>
+        </div>
+        
+        <div class="container mx-auto px-4 py-16 relative z-10">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="w-full md:w-1/2 hero-content mb-10 md:mb-0">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 hero-title">
+                        <span class="gradient-text">仙佛護持*防護盾</span><br>
+                        <span class="text-white">淨化防護噴霧</span>
+                    </h1>
+                    <p class="text-xl md:text-2xl mb-8 text-gray-300">
+                        一噴升起能量防護盾，守住氣場，隔開外界壞東西干擾。
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <button class="btn-primary px-8 py-3 rounded-full font-medium text-white">
+                            立即體驗
+                        </button>
+                        <button class="btn-secondary px-8 py-3 rounded-full font-medium text-white">
+                            了解更多
+                        </button>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 flex justify-center">
+                    <div class="bottle-container animate-float">
+                        <div class="energy-field"></div>
+                        <img src="https://p26-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/982632322db44f76bf40133b3a1f255c.jpg~tplv-a9rns2rl98-24:720:720.jpg?lk3s=8e244e95&amp;rcl=20260317145802E912AF9952B609100388&amp;rrcfp=8a172a1a&amp;x-expires=1774335482&amp;x-signature=O2kh%2FXowUKBQss2MlRgXrkeTIzU%3D" alt="能量防護噴霧" class="bottle w-64 h-auto">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 向下滚动指示 -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#concept" class="text-white opacity-70 hover:opacity-100 transition-opacity">
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- 核心概念 -->
+    <section id="concept" class="py-20 relative section">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center section-title">
+                <span class="gradient-text">核心概念</span>
+            </h2>
+            
+            <div class="flex flex-col md:flex-row items-center mb-20">
+                <div class="w-full md:w-1/2 mb-10 md:mb-0">
+                    <img src="https://p11-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/165fcc2830184d26a268d674f14130bd~tplv-a9rns2rl98-image.image?lk3s=8e244e95&amp;rcl=20260317051133C1036F6D39E4C108BD63&amp;rrcfp=f06b921b&amp;x-expires=1776287545&amp;x-signature=MBuPWrDn9RVGq%2Fq5hteSn%2BYEpyM%3D" alt="能量防護盾" class="w-full h-auto rounded-lg shadow-2xl">
+                </div>
+                <div class="w-full md:w-1/2 md:pl-16">
+                    <h3 class="text-2xl font-bold mb-6 text-white">能量防護盾</h3>
+                    <p class="text-lg mb-6 text-gray-300">
+                        這不只是一瓶天然靈氣淨化噴霧，更像是替自己升起一道隱形防護罩。當你進入人多、氣場混亂、壓力沉重或人際複雜的場合，透過植物精油香氣，幫助你建立專屬的能量防護盾，隔開外界雜亂干擾，守住保護自己的界線、情緒與狀態。
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="card p-6 rounded-lg">
+                            <div class="text-accent mb-4">
+                                <i class="fas fa-shield-alt text-2xl"></i>
+                            </div>
+                            <h4 class="text-xl font-semibold mb-2 text-white">守住氣場</h4>
+                            <p class="text-gray-400">建立個人能量結界防護，不被外界干擾/不能入侵</p>
+                        </div>
+                        <div class="card p-6 rounded-lg">
+                            <div class="text-accent mb-4">
+                                <i class="fas fa-heart text-2xl"></i>
+                            </div>
+                            <h4 class="text-xl font-semibold mb-2 text-white">安心守護</h4>
+                            <p class="text-gray-400">在混亂環境中提供穩定感與安全感</p>
+                        </div>
+                        <div class="card p-6 rounded-lg">
+                            <div class="text-accent mb-4">
+                                <i class="fas fa-balance-scale text-2xl"></i>
+                            </div>
+                            <h4 class="text-xl font-semibold mb-2 text-white">能量平衡</h4>
+                            <p class="text-gray-400">協助調整與平衡個人能量狀態</p>
+                        </div>
+                        <div class="card p-6 rounded-lg">
+                            <div class="text-accent mb-4">
+                                <i class="fas fa-leaf text-2xl"></i>
+                            </div>
+                            <h4 class="text-xl font-semibold mb-2 text-white">自然淨化</h4>
+                            <p class="text-gray-400">透過天然植物精油的力量淨化氣場</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <blockquote class="text-xl md:text-2xl italic text-gray-300 max-w-3xl mx-auto">
+                    "在人多混亂、氣場沉重、情緒壓迫的時刻，替自己啟動一道隱形防護盾。讓不屬於你的雜亂氣息停在外面，把安定與保護留在自己身上。"
+                </blockquote>
+            </div>
+        </div>
+    </section>
+
+    <!-- 神圣成分 -->
+    <section id="ingredients" class="py-20 bg-dark-light relative section">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center section-title">
+                <span class="gradient-text">神聖植物精油配方</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ingredient-grid">
+                <!-- 杜松 -->
+                <div class="ingredient-card rounded-xl overflow-hidden">
+                    <div class="relative h-64">
+                        <img src="https://p26-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/1606850817189871630~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1789247515&amp;x-signature=l9d50gYrDwltRHIGdnBVd3P5WBs%3D" alt="杜松" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4 bg-dark-lighter">
+                        <h3 class="text-xl font-bold mb-1 text-white">杜松 (Juniper)</h3>
+                        <p class="text-white font-medium mb-2">清理負面氣場</p>
+                        <p class="text-gray-400 text-sm">清理負面氣場，帶來清新與淨化的能量，幫助釋放壓力與緊張情緒。</p>
+                    </div>
+                </div>
+                
+                <!-- 秘魯聖木 -->
+                <div class="ingredient-card rounded-xl overflow-hidden">
+                    <div class="relative h-64">
+                        <img src="https://p26-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/1a32936f57044d89aa52a9a896e8b67d~tplv-a9rns2rl98-image.image?lk3s=8e244e95&amp;rcl=20260317151742217D3C7241B457884FC3&amp;rrcfp=03245832&amp;x-expires=1774336669&amp;x-signature=fns9KRgxLhTYXzim3TYl9R022X4%3D" alt="秘魯聖木" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4 bg-dark-lighter">
+                        <h3 class="text-xl font-bold mb-1 text-white">秘魯聖木 (Palo Santo)</h3>
+                        <p class="text-white font-medium mb-2">淨化與平衡能量</p>
+                        <p class="text-gray-400 text-sm">神聖的淨化聖木，能夠驅散負能量，帶來神聖保護與精神覺醒。</p>
+                    </div>
+                </div>
+                
+                <!-- 岩蘭草 -->
+                <div class="ingredient-card rounded-xl overflow-hidden">
+                    <div class="relative h-64">
+                        <img src="https://p3-doubao-search-sign.byteimg.com/labis/cc98a02657af2fc6dbbfd527e097ce59~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1789247515&amp;x-signature=C649edXk%2B%2BsNbf0OEt1FdeC6NbA%3D" alt="岩蘭草" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4 bg-dark-lighter">
+                        <h3 class="text-xl font-bold mb-1 text-white">岩蘭草 (Vetiver)</h3>
+                        <p class="text-white font-medium mb-2">安神穩定</p>
+                        <p class="text-gray-400 text-sm">安神穩定，提供堅實的根基感，幫助連結大地能量，增強安全感。</p>
+                    </div>
+                </div>
+                
+                <!-- 大西洋雪松 -->
+                <div class="ingredient-card rounded-xl overflow-hidden">
+                    <div class="relative h-64">
+                        <img src="https://p3-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/1057710145754759173~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1789247515&amp;x-signature=ZQeSwmDZ8AO9RtIYnNtO6zXLI3U%3D" alt="大西洋雪松" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4 bg-dark-lighter">
+                        <h3 class="text-xl font-bold mb-1 text-white">大西洋雪松 (Cedarwood)</h3>
+                        <p class="text-white font-medium mb-2">建立安全感與防護</p>
+                        <p class="text-gray-400 text-sm">建立安全感與防護，增強個人意志力與自信心，提供穩定的能量生長支持。</p>
+                    </div>
+                </div>
+                
+                <!-- 絲柏 -->
+                <div class="ingredient-card rounded-xl overflow-hidden">
+                    <div class="relative h-64">
+                        <img src="https://p26-doubao-search-sign.byteimg.com/labis/8a5193c7ece5a464c0e75771b5b20877~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1789247515&amp;x-signature=wpat1NUB9%2F%2FdccBtYq88XwNJNns%3D" alt="絲柏" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4 bg-dark-lighter">
+                        <h3 class="text-xl font-bold mb-1 text-white">絲柏 (Cypress)</h3>
+                        <p class="text-white font-medium mb-2">調和能量</p>
+                        <p class="text-gray-400 text-sm">調和能量流動，幫助釋放過去的負面模式，帶來更新與轉化。</p>
+                    </div>
+                </div>
+                
+                <!-- 快樂鼠尾草 -->
+                <div class="ingredient-card rounded-xl overflow-hidden">
+                    <div class="relative h-64">
+                        <img src="https://p11-doubao-search-sign.byteimg.com/labis/e6e559b3b73e4b3e2f24a62e08aa9ecd~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1789247515&amp;x-signature=cH4ngJB%2BEKSkmsmHIDTtN%2Fpcpe8%3D" alt="快樂鼠尾草" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4 bg-dark-lighter">
+                        <h3 class="text-xl font-bold mb-1 text-white">快樂鼠尾草 (Clary Sage)</h3>
+                        <p class="text-white font-medium mb-2">提升正向情緒</p>
+                        <p class="text-gray-400 text-sm">提升正向情緒，減輕焦慮與壓力，開啟直覺與內在智慧。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 主要功效 -->
+    <section id="benefits" class="py-20 relative section">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center section-title">
+                <span class="gradient-text">主要功效</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- 能量整理 -->
+                <div class="card p-8 rounded-xl text-center">
+                    <div class="inline-block p-4 rounded-full bg-primary bg-opacity-20 mb-6">
+                        <i class="fas fa-broom text-3xl text-accent"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-white">能量整理</h3>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-center justify-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>清理混亂氣場</span>
+                        </li>
+                        <li class="flex items-center justify-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>恢復平衡狀態</span>
+                        </li>
+                        <li class="flex items-center justify-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>驅散負面能量</span>
+                        </li>
+                        <li class="flex items-center justify-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>提升能量頻率</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 情緒穩定 -->
+                <div class="card p-8 rounded-xl text-center">
+                    <div class="inline-block p-4 rounded-full bg-secondary bg-opacity-20 mb-6">
+                        <i class="fas fa-heartbeat text-3xl text-accent"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-white">情緒穩定</h3>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-center justify-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>舒緩壓力</span>
+                        </li>
+                        <li class="flex items-center justify-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>帶來放鬆與安定</span>
+                        </li>
+                        <li class="flex items-center justify-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>減輕焦慮與緊張</span>
+                        </li>
+                        <li class="flex items-center justify-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>提升正向情緒</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 空間淨化 -->
+                <div class="card p-8 rounded-xl text-center">
+                    <div class="inline-block p-4 rounded-full bg-accent bg-opacity-10 mb-6">
+                        <i class="fas fa-wind text-3xl text-accent"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-white">空間淨化</h3>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-center justify-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>改善環境氛圍</span>
+                        </li>
+                        <li class="flex items-center justify-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>建立安心感</span>
+                        </li>
+                        <li class="flex items-center justify-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>清除空間負能量</span>
+                        </li>
+                        <li class="flex items-center justify-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>創造和諧能量場</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-20 text-center">
+                <div class="inline-block p-8 rounded-2xl bg-dark-lighter max-w-3xl">
+                    <h3 class="text-2xl font-bold mb-6 text-white">能量防護噴霧的獨特之處</h3>
+                    <p class="text-lg text-gray-300 mb-8">
+                        這款神佛加持-避邪淨化噴霧不僅僅是一款天然靈氣產品，更是一款結合了神佛淨化儀式與現代自然芳療法的能量工具。每一滴精油都經過精心挑選，並透過特殊萃煉天然原精提煉，保留植物的原始生命力與療癒能量。
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <span class="px-4 py-2 bg-primary bg-opacity-20 rounded-full text-white">100% 天然成分</span>
+                        <span class="px-4 py-2 bg-primary bg-opacity-20 rounded-full text-white">無化學添加劑</span>
+                        <span class="px-4 py-2 bg-primary bg-opacity-20 rounded-full text-white">手工加持調配</span>
+                        <span class="px-4 py-2 bg-primary bg-opacity-20 rounded-full text-white">能量淨化</span>
+                        <span class="px-4 py-2 bg-primary bg-opacity-20 rounded-full text-white">可持續採收</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 使用场景 -->
+    <section id="usage" class="py-20 bg-dark-light relative section">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center section-title">
+                <span class="gradient-text">適合使用場所</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 use-scenario-grid">
+                <!-- 個人狀態 -->
+                <div class="card p-8 rounded-xl use-scenario-card">
+                    <div class="text-accent mb-6 text-center">
+                        <i class="fas fa-user use-scenario-icon text-4xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-6 text-center text-white">個人狀態</h3>
+                    <ul class="space-y-4 text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-accent mt-2 mr-3"></i>
+                            <span>情緒低落時，提供情緒支持與撫慰</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-accent mt-2 mr-3"></i>
+                            <span>壓力大時，幫助放鬆身心，紓解壓力</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-accent mt-2 mr-3"></i>
+                            <span>心情煩躁時，帶來平靜與安定</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 環境場合 -->
+                <div class="card p-8 rounded-xl use-scenario-card">
+                    <div class="text-accent mb-6 text-center">
+                        <i class="fas fa-building use-scenario-icon text-4xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-6 text-center text-white">環境場合</h3>
+                    <ul class="space-y-4 text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-accent mt-2 mr-3"></i>
+                            <span>人多的地方，建立個人能量防護</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-accent mt-2 mr-3"></i>
+                            <span>公共空間，淨化周圍氣場</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-accent mt-2 mr-3"></i>
+                            <span>新入住環境，淨化空間能量</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 特殊時刻 -->
+                <div class="card p-8 rounded-xl use-scenario-card">
+                    <div class="text-accent mb-6 text-center">
+                        <i class="fas fa-star use-scenario-icon text-4xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-6 text-center text-white">特殊時刻</h3>
+                    <ul class="space-y-4 text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-accent mt-2 mr-3"></i>
+                            <span>能量感覺沉重時，協助清理與提升</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-accent mt-2 mr-3"></i>
+                            <span>想重新整理心情，開啟新的能量狀態</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-accent mt-2 mr-3"></i>
+                            <span>冥想或靈性練習前，創造神聖空間</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-20">
+                <h3 class="text-2xl font-bold mb-10 text-center text-white">使用方式</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="card p-8 rounded-xl">
+                        <div class="flex items-start">
+                            <div class="text-accent mr-6">
+                                <i class="fas fa-spray-can text-3xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-3 text-white">隨身淨化</h4>
+                                <p class="text-gray-300">噴灑於身體周圍或手心後聞香，建立個人能量防護層。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card p-8 rounded-xl">
+                        <div class="flex items-start">
+                            <div class="text-accent mr-6">
+                                <i class="fas fa-home text-3xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-3 text-white">空間淨化</h4>
+                                <p class="text-gray-300">房間角落噴灑，讓香氣自然流動，淨化整個空間。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card p-8 rounded-xl">
+                        <div class="flex items-start">
+                            <div class="text-accent mr-6">
+                                <i class="fas fa-moon text-3xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-3 text-white">睡眠放鬆</h4>
+                                <p class="text-gray-300">睡前於枕邊輕噴，幫助放鬆身心，提升睡眠品質。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card p-8 rounded-xl">
+                        <div class="flex items-start">
+                            <div class="text-accent mr-6">
+                                <i class="fas fa-car text-3xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-3 text-white">車內使用</h4>
+                                <p class="text-gray-300">車內噴灑，改善長時間駕駛的氣場氛圍，保持清醒與專注。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 能量体验 -->
+    <section id="experience" class="py-20 relative section">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center section-title">
+                <span class="gradient-text">能量場體驗</span>
+            </h2>
+            
+            <div class="flex flex-col md:flex-row items-center gap-10">
+                <div class="w-full md:w-1/2">
+                    <div class="interactive-area h-96 flex items-center justify-center" id="interactive-area">
+                        <div class="mist-effect" id="mist-effect"></div>
+                        <img src="https://p26-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/982632322db44f76bf40133b3a1f255c.jpg~tplv-a9rns2rl98-24:720:720.jpg?lk3s=8e244e95&amp;rcl=20260317145802E912AF9952B609100388&amp;rrcfp=8a172a1a&amp;x-expires=1774335482&amp;x-signature=O2kh%2FXowUKBQss2MlRgXrkeTIzU%3D" alt="能量防護噴霧" class="bottle-interactive w-48 h-auto" id="bottle-interactive">
+                        <canvas id="energy-field-canvas"></canvas>
+                    </div>
+                    <div class="text-center mt-6">
+                        <button class="btn-accent px-8 py-3 rounded-full font-medium" id="spray-button">
+                            <i class="fas fa-spray-can mr-2"></i> 噴灑體驗
+                        </button>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2">
+                    <h3 class="text-2xl font-bold mb-6 text-white">體驗能量防護盾</h3>
+                    <p class="text-lg mb-6 text-gray-300">
+                        透過這個互動體驗，你可以感受能量防護噴霧帶來的能量場變化。點擊上方按鈕，模擬噴灑動作，觀察能量場的形成與擴散。
+                    </p>
+                    <div class="card p-6 rounded-lg mb-6">
+                        <h4 class="text-xl font-semibold mb-3 text-white">能量防護的科學原理</h4>
+                        <p class="text-gray-300">
+                            植物精油含有複雜的分子結構，這些分子可以透過嗅覺系統直接影響大腦的情緒中樞，從而改變我們的情緒狀態與能量振動頻率。同時，特定的植物精油成分也被認為具有調整環境能量場的作用。
+                        </p>
+                    </div>
+                    <div class="card p-6 rounded-lg">
+                        <h4 class="text-xl font-semibold mb-3 text-white">真實用戶反饋</h4>
+                        <blockquote class="italic text-gray-300">
+                            "每次在擁擠的地鐵上使用，都能感覺到周圍形成了一個安靜的空間，不再被外界的雜亂能量影響。" —— 李女士，冥想老師
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 产品购买 -->
+    <section class="py-20 bg-gradient-primary relative">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center gap-10">
+                <div class="w-full md:w-1/2">
+                    <img src="https://p26-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/982632322db44f76bf40133b3a1f255c.jpg~tplv-a9rns2rl98-24:720:720.jpg?lk3s=8e244e95&amp;rcl=20260317145802E912AF9952B609100388&amp;rrcfp=8a172a1a&amp;x-expires=1774335482&amp;x-signature=O2kh%2FXowUKBQss2MlRgXrkeTIzU%3D" alt="能量防護噴霧" class="w-64 h-auto mx-auto">
+                </div>
+                <div class="w-full md:w-1/2 text-center md:text-left">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white">
+                        仙佛護持・能量防護噴霧
+                    </h2>
+                    <p class="text-xl mb-8 text-gray-200">
+                       
+                    </p>
+                    <div class="text-3xl font-bold mb-8 text-accent">
+                        NT$ 290 <span class="text-white text-xl font-normal">/ 10ML</span>
+                    </div>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start">
+                        <button class="btn-accent px-8 py-3 rounded-full font-medium text-dark">
+                            <i class="fas fa-shopping-cart mr-2"></i> 立即購買
+                        </button>
+                        <button class="btn-secondary px-8 py-3 rounded-full font-medium text-white">
+                            <i class="fas fa-heart mr-2"></i> 加入收藏
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark py-10 border-t border-gray-800">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <a href="#" class="text-2xl font-bold gradient-text">仙佛護持</a>
+                    <p class="text-gray-400 mt-2">能量防護噴霧</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-facebook-f text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-line text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-weixin text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500">
+                <p>© 2023 仙佛護持能量防護噴霧. 保留所有權利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 加载动画
+        window.addEventListener('load', () => {
+            const loader = document.querySelector('.loader');
+            setTimeout(() => {
+                loader.classList.add('hidden');
+            }, 1000);
+        });
+
+        // 移动端菜单
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 滚动动画
+        const sections = document.querySelectorAll('.section');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // 粒子背景
+        function createParticles() {
+            const container = document.getElementById('particles-container');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // 随机大小
+                const size = Math.random() * 5 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // 随机位置
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                
+                // 随机动画延迟
+                const delay = Math.random() * 8;
+                particle.style.animationDelay = `${delay}s`;
+                
+                // 随机透明度
+                particle.style.opacity = Math.random() * 0.5 + 0.2;
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        createParticles();
+
+        // 3D能量场可视化
+        function initEnergyField() {
+            const canvas = document.getElementById('energy-field-canvas');
+            const container = document.getElementById('interactive-area');
+            
+            // 设置canvas尺寸
+            function resizeCanvas() {
+                canvas.width = container.clientWidth;
+                canvas.height = container.clientHeight;
+            }
+            
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            const ctx = canvas.getContext('2d');
+            const particles = [];
+            const particleCount = 100;
+            
+            // 创建粒子
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2 + 1,
+                    speedX: Math.random() * 0.5 - 0.25,
+                    speedY: Math.random() * 0.5 - 0.25,
+                    color: `rgba(${Math.random() * 100 + 155}, ${Math.random() * 50}, ${Math.random() * 200 + 55}, ${Math.random() * 0.5 + 0.3})`
+                });
+            }
+            
+            // 鼠标位置追踪
+            let mouseX = canvas.width / 2;
+            let mouseY = canvas.height / 2;
+            
+            container.addEventListener('mousemove', (e) => {
+                const rect = container.getBoundingClientRect();
+                mouseX = e.clientX - rect.left;
+                mouseY = e.clientY - rect.top;
+            });
+            
+            // 动画循环
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // 绘制粒子
+                particles.forEach(particle => {
+                    // 更新位置
+                    particle.x += particle.speedX;
+                    particle.y += particle.speedY;
+                    
+                    // 边界检查
+                    if (particle.x < 0 || particle.x > canvas.width) {
+                        particle.speedX *= -1;
+                    }
+                    if (particle.y < 0 || particle.y > canvas.height) {
+                        particle.speedY *= -1;
+                    }
+                    
+                    // 鼠标交互 - 靠近鼠标的粒子微微偏移
+                    const dx = particle.x - mouseX;
+                    const dy = particle.y - mouseY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < 100) {
+                        const force = (100 - dist) / 100;
+                        particle.x += dx * force * 0.01;
+                        particle.y += dy * force * 0.01;
+                    }
+                    
+                    // 绘制粒子
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                    ctx.fillStyle = particle.color;
+                    ctx.fill();
+                });
+                
+                // 绘制连线
+                particles.forEach((particleA, indexA) => {
+                    particles.slice(indexA + 1).forEach(particleB => {
+                        const dx = particleA.x - particleB.x;
+                        const dy = particleA.y - particleB.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (dist < 100) {
+                            ctx.beginPath();
+                            ctx.moveTo(particleA.x, particleA.y);
+                            ctx.lineTo(particleB.x, particleB.y);
+                            ctx.strokeStyle = `rgba(138, 43, 226, ${0.3 - dist / 333})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    });
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+        
+        initEnergyField();
+
+        // 喷雾互动效果
+        const sprayButton = document.getElementById('spray-button');
+        const mistEffect = document.getElementById('mist-effect');
+        const bottleInteractive = document.getElementById('bottle-interactive');
+        
+        sprayButton.addEventListener('click', () => {
+            // 添加动画类
+            mistEffect.classList.add('active');
+            bottleInteractive.classList.add('active');
+            
+            // 播放喷雾音效（如果需要）
+            // const spraySound = new Audio('spray-sound.mp3');
+            // spraySound.play();
+            
+            // 重置动画
+            setTimeout(() => {
+                mistEffect.classList.remove('active');
+                bottleInteractive.classList.remove('active');
+            }, 2000);
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // 如果是移动端，点击后关闭菜单
+                    if (window.innerWidth < 768) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+
+        // 产品卡片悬停效果
+        const ingredientCards = document.querySelectorAll('.ingredient-card');
+        
+        ingredientCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                const image = card.querySelector('img');
+                image.style.transform = 'scale(1.1)';
+                image.style.transition = 'transform 0.5s ease';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                const image = card.querySelector('img');
+                image.style.transform = 'scale(1)';
+            });
+        });
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            
+            if (window.scrollY > 100) {
+                nav.classList.add('py-2');
+                nav.classList.remove('py-3');
+            } else {
+                nav.classList.add('py-3');
+                nav.classList.remove('py-2');
+            }
+        });
+    </script>
+
+</body></html>
