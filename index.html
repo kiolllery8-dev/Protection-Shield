@@ -118,6 +118,18 @@
             transform: rotateY(15deg) rotateX(5deg);
         }
 
+        .product-image-autoscale {
+            display: block;
+            width: min(100%, 16rem);
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .product-image-autoscale.interactive {
+            width: min(100%, 12rem);
+        }
+
         .energy-field {
             position: absolute;
             top: 0;
@@ -412,7 +424,7 @@
                 <div class="w-full md:w-1/2 flex justify-center">
                     <div class="bottle-container animate-float">
                         <div class="energy-field"></div>
-                        <img src="assets/1111/111.png" alt="能量防護噴霧" class="bottle w-64 h-auto">
+                        <img src="assets/1111/111.png" alt="能量防護噴霧" class="bottle product-image-autoscale">
                     </div>
                 </div>
             </div>
@@ -809,7 +821,7 @@
                 <div class="w-full md:w-1/2">
                     <div class="interactive-area h-96 flex items-center justify-center" id="interactive-area">
                         <div class="mist-effect" id="mist-effect"></div>
-                        <img src="assets/1111/111.png" alt="能量防護噴霧" class="bottle-interactive w-48 h-auto" id="bottle-interactive">
+                        <img src="assets/1111/111.png" alt="能量防護噴霧" class="bottle-interactive product-image-autoscale interactive" id="bottle-interactive">
                         <canvas id="energy-field-canvas"></canvas>
                     </div>
                     <div class="text-center mt-6">
@@ -845,7 +857,7 @@
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row items-center gap-10">
                 <div class="w-full md:w-1/2">
-                    <img src="assets/1111/111.png" alt="能量防護噴霧" class="w-64 h-auto mx-auto">
+                    <img src="assets/1111/111.png" alt="能量防護噴霧" class="product-image-autoscale mx-auto">
                 </div>
                 <div class="w-full md:w-1/2 text-center md:text-left">
                     <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white">
