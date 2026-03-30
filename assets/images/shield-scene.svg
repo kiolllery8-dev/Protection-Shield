@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-label="能量防護盾示意圖">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#4a148c"/>
+    </linearGradient>
+    <radialGradient id="shield" cx="50%" cy="45%" r="35%">
+      <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.8"/>
+      <stop offset="80%" stop-color="#7c3aed" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <circle cx="600" cy="370" r="260" fill="url(#shield)"/>
+  <path d="M600 180 770 250v170c0 150-110 235-170 270-60-35-170-120-170-270V250z" fill="#93c5fd44" stroke="#e0f2fe" stroke-width="6"/>
+  <text x="600" y="700" fill="#fff" font-size="46" text-anchor="middle" font-family="Noto Sans TC, sans-serif">能量防護盾（示意圖）</text>
+</svg>
